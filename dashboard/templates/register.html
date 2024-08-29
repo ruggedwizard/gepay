@@ -1,0 +1,150 @@
+{% load static %}
+{% load tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% tailwind_preload_css %}
+    {% tailwind_css %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <!-- Include Tailwind CSS -->
+    <link rel="stylesheet" href="{% static 'tailwind.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #232526, #414345);
+            font-family: 'Roboto', sans-serif;
+            color: #ffffff;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        header h1 {
+            color: #00f260;
+            text-shadow: 0 0 10px rgba(0, 242, 96, 0.7);
+        }
+
+        header a {
+            color: #00f260;
+            text-shadow: 0 0 5px rgba(0, 242, 96, 0.5);
+            transition: color 0.3s ease;
+        }
+
+        header a:hover {
+            color: #0575e6;
+            text-shadow: 0 0 10px rgba(5, 117, 230, 0.7);
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            color: #ffffff;
+        }
+
+        .container h2 {
+            color: #00f260;
+            text-shadow: 0 0 10px rgba(0, 242, 96, 0.7);
+        }
+
+        label {
+            color: #00f260;
+            text-shadow: 0 0 5px rgba(0, 242, 96, 0.5);
+        }
+
+        input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .h22 {
+            color: #ff4e50;
+            text-shadow: 0 0 5px rgba(255, 78, 80, 0.7);
+        }
+
+        .h23 {
+            color: #00f260;
+            text-shadow: 0 0 5px rgba(0, 242, 96, 0.7);
+        }
+
+        button {
+            background: linear-gradient(135deg, #00f260, #0575e6);
+            box-shadow: 0 4px 15px 0 rgba(0, 242, 96, 0.75);
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #0575e6, #00f260);
+            box-shadow: 0 6px 20px 0 rgba(5, 117, 230, 0.75);
+        }
+
+        a {
+            color: #00f260;
+            text-shadow: 0 0 5px rgba(0, 242, 96, 0.5);
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #0575e6;
+            text-shadow: 0 0 10px rgba(5, 117, 230, 0.7);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col items-center justify-center">
+    <!-- <header class="w-full py-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-semibold">Sleekpay</h1>
+           
+        </div>
+    </header> -->
+
+    <div class="container mx-auto mt-8 p-4 max-w-md rounded-lg">
+        <h2 class="text-3xl font-semibold mb-6 text-center">Sign Up</h2>
+
+        {% for message in messages %}
+        {% if message.tags == 'error' %}
+        <div class="h22">{{ message }}</div>
+        {% elif message.success %}
+        <div class="h23">{{ message }}</div>
+        {% endif %}
+        {% endfor %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label for="username" class="block text-sm font-medium">Username</label>
+                <input name="username" type="text" id="newUsername" class="w-full border rounded-md p-2" placeholder="Enter your username">
+            </div>
+            <div class="mb-4">
+                <label for="email" class="block text-sm font-medium">Email</label>
+                <input name="email" type="text" id="newEmail" class="w-full border rounded-md p-2" placeholder="Enter your email">
+            </div>
+            <div class="mb-4">
+                <label for="password" class="block text-sm font-medium">Password</label>
+                <input name="password" type="password" id="newPassword" class="w-full border rounded-md p-2" placeholder="Enter your password">
+            </div>
+            <div class="mb-4">
+                <label for="password2" class="block text-sm font-medium">Confirm Password:</label>
+                <input name="password2" type="password" id="confirmPassword" class="w-full border rounded-md p-2" placeholder="Confirm your password">
+            </div>
+            <div class="text-center">
+                <p>Already have an account? <a href="/login">Login</a></p>
+            </div>
+            <button type="submit" class="w-full mt-6 py-2 rounded-md">Sign Up</button>
+        </form>
+    </div>
+</body>
+
+</html>

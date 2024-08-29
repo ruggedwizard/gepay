@@ -1,0 +1,156 @@
+{% load static %}
+{% load tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% tailwind_preload_css %}
+    {% tailwind_css %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} Sleekpay {% endblock %}</title>
+    <!-- Include Tailwind CSS -->
+    <link rel="stylesheet" href="{% static 'tailwind.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            font-family: 'Roboto', sans-serif;
+            color: #ffffff;
+        }
+
+        .neon-text {
+            color: #fff;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.4), 0 0 10px rgba(255, 255, 255, 0.3), 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .neon-icon {
+            color: #00f260;
+            text-shadow: 0 0 5px rgba(0, 242, 96, 0.5), 0 0 10px rgba(0, 242, 96, 0.3), 0 0 20px rgba(0, 242, 96, 0.2);
+        }
+
+        .card-bg {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        .form-input {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            border: none;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border: 2px solid #00f260;
+            box-shadow: 0 0 10px #00f260;
+        }
+
+        .hover-effect:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: background-color 0.3s ease;
+        }
+    </style>
+</head>
+
+<body class="font-sans min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-gray-900 text-white p-4 shadow-lg">
+        <div class="container mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <a href="/" class="text-white text-2xl neon-icon"><i class="fa-solid fa-arrow-left"></i></a>
+                <h2 class="text-lg font-semibold neon-text">Transfer Money</h2>
+            </div>
+            <a href="#" class="text-2xl neon-icon" target="_blank" rel="noopener noreferrer">
+                <i class="far fa-bell"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto p-4">
+        <!-- Recipient Account Number Section -->
+        <section class="card-bg rounded-lg shadow-md p-6 m-2">
+            <h3 class="block text-lg font-medium mb-2 neon-text">Recipient Account Number</h3>
+            <form action="{% url 'fetch_users' %}" method="post" class="space-y-4">
+                {% csrf_token %}
+                <div class="relative">
+                    <label for="recipient" class="sr-only">Recipient</label>
+                    <input placeholder="Enter username" type="text" id="recipient" name="recipient" class="form-input w-full rounded-md p-3 pl-10 focus:ring focus:ring-blue-200 focus:ring-opacity-50" required>
+                    <div class="absolute left-0 inset-y-0 flex items-center pl-3 pointer-events-none">
+                        <i class="fas fa-user text-gray-400"></i>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <!-- Beneficiaries Section -->
+        <section class="card-bg rounded-lg shadow-md p-6 m-2">
+            <h3 class="block text-lg font-medium mb-4 neon-text">Beneficiaries</h3>
+            <div id="userListContainer" class="space-y-4">
+                {% for user in users %}
+                <div class="flex items-center space-x-4 p-2 hover:bg-gray-100 cursor-pointer rounded-lg hover-effect" onclick="window.location.href='/recipient/{{ user.username }}'">
+                    <img class="rounded-full w-12 h-12" src="{% static 'images/avatars/avatar-female-3.jpg' %}" alt="{{ user.username }}">
+                    <div>
+                        <span class="text-sm font-semibold neon-text">{{ user.username }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+                <!-- Container for dynamic user list -->
+                <div id="dynamicUserListContainer"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- JavaScript for Fetching Users -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            function fetchUsers(username) {
+                $.ajax({
+                    url: "{% url 'fetch_users' %}",
+                    data: {
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                        username: username
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        var userListContainer = $('#dynamicUserListContainer');
+                        userListContainer.empty();
+                        $.each(data, function (index, user) {
+                            var userDiv = $("<div class='flex items-center space-x-4 p-2 hover:bg-gray-100 cursor-pointer rounded-lg hover-effect'>" +
+                                "<img class='rounded-full w-12 h-12' src='{% static 'images/avatars/avatar-female-3.jpg' %}' alt=''>" +
+                                "<div><span class='text-sm font-semibold neon-text'>" + user.username + "</span></div>" +
+                                "</div>");
+
+                            userDiv.click(function () {
+                                window.location.href = '/recipient/' + user.username;
+                            });
+
+                            userListContainer.append(userDiv);
+                        });
+                    }
+                });
+            }
+
+            $('#recipient').on('input', function () {
+                var username = $(this).val();
+                fetchUsers(username);
+            });
+
+            $(document).on('click', '.recipientUser', function () {
+                var clickedUsername = $(this).find('.username').text();
+                window.location.href = '/recipient/' + clickedUsername;
+            });
+        });
+    </script>
+</body>
+
+</html>

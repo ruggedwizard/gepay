@@ -1,0 +1,105 @@
+{% load static %}
+{% load tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% tailwind_preload_css %}
+    {% tailwind_css %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} Password Verification {% endblock %}</title>
+    <!-- Include Tailwind CSS -->
+    <link rel="stylesheet" href="{% static 'tailwind.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            font-family: 'Roboto', sans-serif;
+            color: #ffffff;
+        }
+
+        .neon-text {
+            color: #fff;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.4), 0 0 10px rgba(255, 255, 255, 0.3), 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .neon-icon {
+            color: #00f260;
+            text-shadow: 0 0 5px rgba(0, 242, 96, 0.5), 0 0 10px rgba(0, 242, 96, 0.3), 0 0 20px rgba(0, 242, 96, 0.2);
+        }
+
+        .card-bg {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        .form-input {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            border: none;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border: 2px solid #00f260;
+            box-shadow: 0 0 10px #00f260;
+        }
+
+        .hover-effect:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: background-color 0.3s ease;
+        }
+
+        .error-text {
+            color: #ff4d4d;
+            text-shadow: 0 0 5px rgba(255, 77, 77, 0.5), 0 0 10px rgba(255, 77, 77, 0.3), 0 0 20px rgba(255, 77, 77, 0.2);
+        }
+    </style>
+</head>
+
+<body class="font-sans flex flex-col items-center justify-center">
+    <!-- Display Messages -->
+    {% for message in messages %}
+    <h2 class="error-text text-center mb-4">{{message}}</h2>
+    {% endfor %}
+
+    <!-- Header -->
+    <header class="bg-gray-900 text-white w-full py-4 shadow-lg">
+        <div class="container mx-auto flex items-center justify-between px-4">
+            <div class="flex items-center">
+                <a href="/" class="text-white text-2xl neon-icon mr-4">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+                <h2 class="text-xl font-semibold neon-text">Verify Password</h2>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="card-bg rounded-lg p-6 shadow-md w-full max-w-md mt-8">
+        <form id="passwordForm" method="post" action="{% url 'verify_pin' %}">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label for="password" class="block text-sm font-medium mb-2 neon-text">Enter your password</label>
+                <input name="password" type="password" id="password" class="form-input w-full rounded-md p-2" required>
+            </div>
+
+            <!-- Error message for invalid password -->
+            {% if error %}
+            <p id="errorMessage" class="error-text font-medium">{{ error }}</p>
+            {% endif %}
+
+            <button type="submit" class="bg-blue-600 neon-text text-white px-4 py-2 rounded-md hover:bg-blue-700 w-full hover-effect">Verify</button>
+        </form>
+    </main>
+</body>
+
+</html>

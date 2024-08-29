@@ -1,0 +1,103 @@
+{% load static %}
+{% load tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} Sleekpay {% endblock %}</title>
+    <!-- Include Tailwind CSS -->
+    <link rel="stylesheet" href="{% static 'tailwind.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #2b5876, #4e4376);
+            font-family: 'Roboto', sans-serif;
+            color: #ffffff;
+        }
+
+        .navbar {
+            background: rgba(0, 0, 0, 0.6);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .navbar a {
+            color: #ffffff;
+            transition: color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            color: #00f260;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .transaction-details p {
+            color: #00f260;
+            font-size: 1.1rem;
+            margin: 10px 0;
+        }
+
+        .transaction-details strong {
+            color: #ffffff;
+        }
+
+        .download-link a {
+            color: #ffffff;
+            transition: color 0.3s ease;
+            font-weight: bold;
+        }
+
+        .download-link a:hover {
+            color: #00f260;
+        }
+
+        .neon-text {
+            text-shadow: 0 0 5px rgba(0, 242, 96, 0.8), 0 0 20px rgba(0, 242, 96, 0.4), 0 0 30px rgba(0, 242, 96, 0.2);
+        }
+
+        .icon {
+            font-size: 60px;
+            color: #00f260;
+            text-shadow: 0 0 10px rgba(0, 242, 96, 0.8);
+            margin-bottom: 20px;
+        }
+    </style>
+    {% tailwind_preload_css %}
+    {% tailwind_css %}
+</head>
+
+<body class=" flex flex-col items-center justify-center">
+    <!-- Navigation -->
+    <div class="flex items-center justify-between navbar py-4 px-6 w-full shadow-md">
+        <a href="{% url 'index' %}" class="text-lg"><i class="fas fa-home mr-2"></i> Home</a>
+    </div>
+
+    <!-- Content -->
+    <div class="container mx-auto mt-8 max-w-md p-6">
+        <div class="text-center">
+            <i class="fas fa-check-circle icon"></i>
+            <h1 class="text-4xl font-bold neon-text mb-4">Transaction Successful!</h1>
+        </div>
+        <div class="transaction-details">
+            <h2 class="text-2xl font-semibold mb-6 text-center">Transaction Details</h2>
+            <p><strong>Sender:</strong> {{ transaction.sender }}</p>
+            <p><strong>Receiver:</strong> {{ transaction.receiver }}</p>
+            <p><strong>Amount:</strong> ₦{{ transaction.amount }}</p>
+            <p><strong>Date:</strong> {{ transaction.date }}</p>
+        </div>
+        <div class="text-center mt-6">
+            <p class="download-link"><a href="{{ receipt_url }}"><i class="fas fa-download mr-2"></i>Download Receipt</a></p>
+        </div>
+    </div>
+</body>
+
+</html>

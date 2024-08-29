@@ -1,0 +1,86 @@
+{% load static %}
+{% load tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% tailwind_preload_css %}
+    {% tailwind_css %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - {{ user.username }}</title>
+    <!-- Include Tailwind CSS -->
+    <link rel="stylesheet" href="{% static 'tailwind.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            font-family: 'Roboto', sans-serif;
+        }
+        .neon-text {
+            color: #fff;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.4), 0 0 10px rgba(255, 255, 255, 0.3), 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+        .card-bg {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+    <div class="max-w-2xl w-full bg-white rounded-lg shadow-lg p-8 card-bg">
+        <h1 class="text-3xl font-semibold text-center neon-text mb-6">User Profile</h1>
+
+        <!-- Profile Picture -->
+        <div class="flex justify-center mb-6">
+            <img class="w-32 h-32 rounded-full object-cover border-4 border-blue-500" src="{{ profile_picture }}" alt="Profile Picture">
+        </div>
+
+        <!-- User Details -->
+        <div class="space-y-6">
+            <!-- Full Name -->
+            <div class="flex items-center justify-between">
+                <span class="text-gray-600 font-medium neon-text">Full Name:</span>
+                <span class="text-gray-800 font-semibold">{{ full_name }}</span>
+            </div>
+            <!-- Email -->
+            <div class="flex items-center justify-between">
+                <span class="text-gray-600 font-medium neon-text">Email:</span>
+                <span class="text-gray-800 font-semibold">{{ email }}</span>
+            </div>
+            <!-- Phone Number -->
+            <div class="flex items-center justify-between">
+                <span class="text-gray-600 font-medium neon-text">Phone Number:</span>
+                <span class="text-gray-800 font-semibold">{{ phone_number }}</span>
+            </div>
+            <!-- Account Number -->
+            <div class="flex items-center justify-between">
+                <span class="text-gray-600 font-medium neon-text">Account Number:</span>
+                <span class="text-gray-800 font-semibold">{{ account_number }}</span>
+            </div>
+            <!-- Account Balance -->
+            <div class="flex items-center justify-between">
+                <span class="text-gray-600 font-medium neon-text">Account Balance:</span>
+                <span class="text-gray-800 font-semibold">₦{{ account_balance }}</span>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="mt-8 flex flex-col md:flex-row md:justify-between md:ml-5">
+            <a href="/settings" class="w-full md:w-1/2 mb-4 md:mb-0">
+                <button class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300 w-full">
+                    <i class="fas fa-user-edit mr-2"></i> Edit Profile
+                </button>
+            </a>
+            <a href="/delete_account" class="w-full md:w-1/2">
+                <button class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition duration-300 w-full">
+                    <i class="fas fa-trash-alt mr-2"></i> Delete Account
+                </button>
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

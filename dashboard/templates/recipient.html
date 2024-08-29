@@ -1,0 +1,92 @@
+{% load static %}
+{% load tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% tailwind_preload_css %}
+    {% tailwind_css %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} Transfer {% endblock %}</title>
+    <!-- Include Tailwind CSS -->
+    <link rel="stylesheet" href="{% static 'tailwind.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            font-family: 'Roboto', sans-serif;
+        }
+        .neon-text {
+            color: #fff;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.4), 0 0 10px rgba(255, 255, 255, 0.3), 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+        .card-bg {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        .error-message {
+            color: red;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white w-full py-4 shadow-md">
+        <div class="container mx-auto flex items-center justify-between px-6">
+            <div class="flex items-center">
+                <a href="/transfer" class="text-white text-3xl hover:text-gray-200 transition duration-300 ease-in-out mr-4">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+                <h2 class="text-2xl font-bold">Transfer to Recipient</h2>
+            </div>
+            <a href="/" class="text-2xl hover:text-gray-200 transition duration-300 ease-in-out" title="Home">
+                <i class="fa-solid fa-home"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto mt-8 p-4 flex flex-col items-center">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg card-bg">
+            <div class="flex items-center mb-6">
+                <img class="rounded-full w-16 h-16 border-2 border-fc62db" src="{% static 'images/avatars/blank-profile-picture.png' %}" alt="Recipient's Avatar">
+                <h3 class="text-lg font-semibold neon-text ml-4">{{ recipient_username }}</h3>
+            </div>
+
+            <form id="transferForm" method="post">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label for="amount" class="block text-sm font-medium neon-text mb-2">Amount</label>
+                    <input name="transfer" type="number" id="amount" class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-fc62db" required>
+                </div>
+
+                <p id="accountBalance" class="text-sm font-medium mb-4 neon-text">Account Balance: ₦{{ account_balance }}</p>
+                <p id="errorMessage" class="error-message text-red-500 font-medium hidden">Insufficient balance!</p>
+
+                <button id="transferButton" type="submit" class="bg-fc62db text-white px-4 py-2 rounded-md hover:bg-fc62db-dark transition duration-300 w-full">Transfer</button>
+            </form>
+        </div>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var accountBalance = parseFloat("{{ account_balance }}");
+
+            $('#transferForm').submit(function(event) {
+                event.preventDefault();
+                var transferAmount = parseFloat($('#amount').val());
+
+                if (transferAmount > accountBalance) {
+                    $('#errorMessage').removeClass('hidden');
+                } else {
+                    $('#errorMessage').addClass('hidden');
+                    this.submit();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
